@@ -128,16 +128,6 @@ impl Counter {
         Self::count_all_from_input(input_data)
     }
 
-    fn read_input(&self) -> Result<String, io::Error> {
-        let mut buffer = String::new();
-        if let Some(ref path) = self.file_path {
-            let mut file = File::open(path)?;
-            file.read_to_string(&mut buffer)?;
-        } else {
-            io::stdin().read_to_string(&mut buffer)?;
-        }
-        Ok(buffer)
-    }
     pub fn count_bytes(&self) -> Result<usize, io::Error> {
         let input_data = self.read_input()?;
         Self::count_bytes_from_reader(Cursor::new(input_data.as_str()))
@@ -156,6 +146,17 @@ impl Counter {
     pub fn count_chars(&self) -> Result<usize, io::Error> {
         let input_data = self.read_input()?;
         Self::count_chars_from_reader(Cursor::new(input_data.as_str()))
+    }
+
+    fn read_input(&self) -> Result<String, io::Error> {
+        let mut buffer = String::new();
+        if let Some(ref path) = self.file_path {
+            let mut file = File::open(path)?;
+            file.read_to_string(&mut buffer)?;
+        } else {
+            io::stdin().read_to_string(&mut buffer)?;
+        }
+        Ok(buffer)
     }
 
     fn count_bytes_from_reader<R: BufRead>(mut reader: R) -> Result<usize, io::Error> {
